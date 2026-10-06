@@ -7,25 +7,32 @@
 </head>
 <body style="margin: 0; padding: 0; width: 100%; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f5f6f8; box-sizing: border-box;">
 
-  <!-- Contenedor Principal -->
   <div id="addin-main-wrapper" style="width: 100%; min-height: 100vh; display: flex; flex-direction: column; margin: 0; padding: 0; box-sizing: border-box;">
     
-    <!-- Barra Superior Estilo MyGeotab -->
+    <!-- Barra Superior con Indicador Visual de Base de Datos -->
     <div id="addin-header-bar" style="background-color: #25313e; color: #ffffff; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.15); box-sizing: border-box; min-height: 50px; flex-shrink: 0;">
-      <div style="font-size: 15px; font-weight: 600; color: #ffffff; letter-spacing: 0.3px;">
-        Gestión de Revisiones e Instalaciones
+      
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 15px; font-weight: 600; color: #ffffff; letter-spacing: 0.3px;">
+          Gestión de Revisiones e Instalaciones
+        </span>
+        <!-- Insignia indicadora de la Base de Datos -->
+        <span id="db-badge" style="background-color: #384a5d; color: #64b5f6; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; border: 1px solid #4f6378;">
+          BD: Cargando...
+        </span>
       </div>
+
       <div style="display: flex; gap: 10px; align-items: center;">
-        <button id="btn-form" onclick="switchTab('form')" style="background-color: #0076ce; color: #ffffff; border: 1px solid #0076ce; padding: 8px 18px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; outline: none; transition: all 0.2s ease;">
+        <button id="btn-form" onclick="switchTab('form')" style="background-color: #0076ce; color: #ffffff; border: 1px solid #0076ce; padding: 8px 18px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; outline: none;">
           Nueva Solicitud
         </button>
-        <button id="btn-sheet" onclick="switchTab('sheet')" style="background-color: rgba(255, 255, 255, 0.1); color: #e0e0e0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 18px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; outline: none; transition: all 0.2s ease;">
+        <button id="btn-sheet" onclick="switchTab('sheet')" style="background-color: rgba(255, 255, 255, 0.1); color: #e0e0e0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 18px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; outline: none;">
           Estado de Trabajos
         </button>
       </div>
     </div>
 
-    <!-- Contenedor del Iframe Forzado a Pantalla Completa -->
+    <!-- Contenedor del Iframe -->
     <div id="addin-content-area" style="width: 100%; flex: 1; min-height: calc(100vh - 60px); height: calc(100vh - 60px); margin: 0; padding: 0; box-sizing: border-box; overflow: hidden;">
       <iframe id="main-frame" 
               src="https://docs.google.com/forms/d/e/1FAIpQLSe2R1JXtsO6H_DBujCz_a5ZFRbcRBo3KMD1gBTAuCD1BCxEvQ/viewform?embedded=true" 
@@ -36,62 +43,80 @@
   </div>
 
   <script>
-// SUSTITUYE "entry.1234567890" POR TU ID REAL DE PASO 1
-const ENTRY_DB_ID = "entry.1821858166"; 
+    // 1. REEMPLAZA CON TU ID REAL DE PREGUNTA OBTENIDO EN EL PASO 1
+    const ENTRY_DB_ID = "entry.1821858166"; 
 
-const FORM_BASE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe2R1JXtsO6H_DBujCz_a5ZFRbcRBo3KMD1gBTAuCD1BCxEvQ/viewform?embedded=true";
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPu6sogcbKBcRIaN7RTSPcpfVKhKFfJxrtquKjmaeXIEeO33_A2V9OvMNZhIaFh_RDRd5_Cc1jx2ok/pubhtml?widget=true&headers=false";
+    const FORM_BASE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe2R1JXtsO6H_DBujCz_a5ZFRbcRBo3KMD1gBTAuCD1BCxEvQ/viewform?embedded=true";
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPu6sogcbKBcRIaN7RTSPcpfVKhKFfJxrtquKjmaeXIEeO33_A2V9OvMNZhIaFh_RDRd5_Cc1jx2ok/pubhtml?widget=true&headers=false";
 
-let currentDbUrl = FORM_BASE_URL;
+    let currentDbUrl = FORM_BASE_URL;
 
-function switchTab(tab) {
-  const frame = document.getElementById('main-frame');
-  const btnForm = document.getElementById('btn-form');
-  const btnSheet = document.getElementById('btn-sheet');
-
-  if (tab === 'form') {
-    frame.src = currentDbUrl;
-    btnForm.style.backgroundColor = "#0076ce";
-    btnForm.style.borderColor = "#0076ce";
-    btnForm.style.color = "#ffffff";
-    
-    btnSheet.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-    btnSheet.style.borderColor = "rgba(255, 255, 255, 0.25)";
-    btnSheet.style.color = "#e0e0e0";
-  } else if (tab === 'sheet') {
-    frame.src = SHEET_URL;
-    btnSheet.style.backgroundColor = "#0076ce";
-    btnSheet.style.borderColor = "#0076ce";
-    btnSheet.style.color = "#ffffff";
-
-    btnForm.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-    btnForm.style.borderColor = "rgba(255, 255, 255, 0.25)";
-    btnForm.style.color = "#e0e0e0";
-  }
-}
-
-// Integración con el ciclo de vida de MyGeotab
-geotab.addin.workOrders = function (api, state) {
-  return {
-    initialize: function (api, state, callback) {
-      // 1. Obtiene el nombre de la base de datos de MyGeotab automáticamente
-      const databaseName = state.database || 'Base_Desconocida';
-      
-      // 2. Construye la URL del formulario con el campo "Base de Datos" pre-rellenado
-      currentDbUrl = `${FORM_BASE_URL}&${ENTRY_DB_ID}=${encodeURIComponent(databaseName)}`;
-      
-      // 3. Carga el iframe con la URL personalizada
+    function switchTab(tab) {
       const frame = document.getElementById('main-frame');
+      const btnForm = document.getElementById('btn-form');
+      const btnSheet = document.getElementById('btn-sheet');
+
+      if (tab === 'form') {
+        frame.src = currentDbUrl;
+        btnForm.style.backgroundColor = "#0076ce";
+        btnForm.style.borderColor = "#0076ce";
+        btnForm.style.color = "#ffffff";
+        
+        btnSheet.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+        btnSheet.style.borderColor = "rgba(255, 255, 255, 0.25)";
+        btnSheet.style.color = "#e0e0e0";
+      } else if (tab === 'sheet') {
+        frame.src = SHEET_URL;
+        btnSheet.style.backgroundColor = "#0076ce";
+        btnSheet.style.borderColor = "#0076ce";
+        btnSheet.style.color = "#ffffff";
+
+        btnForm.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+        btnForm.style.borderColor = "rgba(255, 255, 255, 0.25)";
+        btnForm.style.color = "#e0e0e0";
+      }
+    }
+
+    // Actualiza la insignia en la barra y recarga la URL del formulario
+    function aplicarBaseDeDatos(databaseName) {
+      var badge = document.getElementById('db-badge');
+      if (badge) {
+        badge.innerText = "BD: " + databaseName;
+      }
+
+      currentDbUrl = FORM_BASE_URL + "&" + ENTRY_DB_ID + "=" + encodeURIComponent(databaseName);
+      
+      var frame = document.getElementById('main-frame');
       if (frame) {
         frame.src = currentDbUrl;
       }
-      
-      callback();
-    },
-    focus: function (api, state) {},
-    blur: function (api, state) {}
-  };
-};
+    }
+
+    // Ciclo de vida oficial MyGeotab
+    geotab.addin.workOrders = function (api, state) {
+      return {
+        initialize: function (api, state, callback) {
+          // Intentar obtener BD desde 'state' o mediante 'api.getSession'
+          var db = (state && state.database) ? state.database : null;
+
+          if (db) {
+            aplicarBaseDeDatos(db);
+            callback();
+          } else if (api && typeof api.getSession === 'function') {
+            api.getSession(function (session) {
+              var sessionDb = (session && session.database) ? session.database : 'Sin_Sesion';
+              aplicarBaseDeDatos(sessionDb);
+              callback();
+            });
+          } else {
+            aplicarBaseDeDatos('Desconocida');
+            callback();
+          }
+        },
+        focus: function (api, state) {},
+        blur: function (api, state) {}
+      };
+    };
   </script>
 </body>
 </html>
