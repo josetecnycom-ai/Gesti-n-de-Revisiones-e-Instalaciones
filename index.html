@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Revisiones e Instalaciones</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f5f6f8;
+      overflow: hidden;
+    }
+    .addin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #25313e;
+      color: #ffffff;
+      padding: 0 20px;
+      height: 50px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .addin-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .tabs-container {
+      display: flex;
+      gap: 8px;
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #d1d5db;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+    .tab-btn.active {
+      background: #0076ce;
+      border-color: #0076ce;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .iframe-wrapper {
+      width: 100%;
+      height: calc(100vh - 50px);
+      position: relative;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="addin-header">
+    <div class="addin-title">Gestión de Revisiones e Instalaciones</div>
+    <div class="tabs-container">
+      <button class="tab-btn active" id="btn-form" onclick="showTab('form')">Nueva Solicitud</button>
+      <button class="tab-btn" id="btn-sheet" onclick="showTab('sheet')">Estado de Trabajos</button>
+    </div>
+  </div>
+
+  <div class="iframe-wrapper">
+    <!-- Reemplazar TU_FORM_ID con el ID público de tu Google Form -->
+    <iframe id="app-frame" src="https://docs.google.com/forms/d/e/TU_FORM_ID/viewform?embedded=true"></iframe>
+  </div>
+
+  <script>
+    // REEMPLAZAR CON TUS ENLACES REALES DE GOOGLE FORMS Y SHEETS:
+    const FORM_URL = "https://forms.gle/K1vESnahipf6wDqr8";
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/1vmRS9Uxks6TTTGr_J5AhQkNCVQ1De0of9L6AIqVX54Y/edit?usp=sharing";
+
+    function showTab(tabName) {
+      const frame = document.getElementById('app-frame');
+      const btnForm = document.getElementById('btn-form');
+      const btnSheet = document.getElementById('btn-sheet');
+
+      if (tabName === 'form') {
+        frame.src = FORM_URL;
+        btnForm.classList.add('active');
+        btnSheet.classList.remove('active');
+      } else if (tabName === 'sheet') {
+        frame.src = SHEET_URL;
+        btnSheet.classList.add('active');
+        btnForm.classList.remove('active');
+      }
+    }
+
+    /**
+     * Integración con MyGeotab Add-in Lifecycle
+     */
+    geotab.addin.workOrders = function (api, state) {
+      return {
+        initialize: function (api, state, callback) {
+          callback();
+        },
+        focus: function (api, state) {
+          // El Add-in se hace visible en pantalla
+        },
+        blur: function (api, state) {
+          // El usuario navega fuera del Add-in
+        }
+      };
+    };
+  </script>
+</body>
+</html>
