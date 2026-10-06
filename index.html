@@ -1,115 +1,41 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" style="margin:0; padding:0; height:100%; width:100%;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Revisiones e Instalaciones</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    }
-
-    /* Contenedor principal ajustado al 100% en MyGeotab */
-    #addin-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      background-color: #f5f6f8;
-    }
-
-    /* Barra superior estilo MyGeotab */
-    .header-bar {
-      height: 50px;
-      background-color: #25313e;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      z-index: 10;
-      flex-shrink: 0;
-    }
-
-    .header-title {
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .tab-btn {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: #e0e0e0;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 7px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      outline: none;
-    }
-
-    .tab-btn:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-    }
-
-    .tab-btn.active {
-      background-color: #0076ce;
-      border-color: #0076ce;
-      color: #ffffff;
-    }
-
-    /* Área del iframe a pantalla completa */
-    .content-area {
-      flex: 1;
-      width: 100%;
-      height: calc(100% - 50px);
-      position: relative;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-    }
-  </style>
 </head>
-<body>
+<body style="margin: 0; padding: 0; width: 100%; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f5f6f8; box-sizing: border-box;">
 
-  <div id="addin-container">
-    <div class="header-bar">
-      <div class="header-title">Gestión de Revisiones e Instalaciones</div>
-      <div class="btn-group">
-        <button id="btn-form" class="tab-btn active" onclick="switchTab('form')">Nueva Solicitud</button>
-        <button id="btn-sheet" class="tab-btn" onclick="switchTab('sheet')">Estado de Trabajos</button>
+  <!-- Contenedor Principal -->
+  <div id="addin-main-wrapper" style="width: 100%; min-height: 100vh; display: flex; flex-direction: column; margin: 0; padding: 0; box-sizing: border-box;">
+    
+    <!-- Barra Superior Estilo MyGeotab -->
+    <div id="addin-header-bar" style="background-color: #25313e; color: #ffffff; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.15); box-sizing: border-box; min-height: 50px; flex-shrink: 0;">
+      <div style="font-size: 15px; font-weight: 600; color: #ffffff; letter-spacing: 0.3px;">
+        Gestión de Revisiones e Instalaciones
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <button id="btn-form" onclick="switchTab('form')" style="background-color: #0076ce; color: #ffffff; border: 1px solid #0076ce; padding: 8px 18px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; outline: none; transition: all 0.2s ease;">
+          Nueva Solicitud
+        </button>
+        <button id="btn-sheet" onclick="switchTab('sheet')" style="background-color: rgba(255, 255, 255, 0.1); color: #e0e0e0; border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 18px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; outline: none; transition: all 0.2s ease;">
+          Estado de Trabajos
+        </button>
       </div>
     </div>
 
-    <div class="content-area">
-      <iframe id="main-frame" src="https://docs.google.com/forms/d/e/1FAIpQLSe2R1JXtsO6H_DBujCz_a5ZFRbcRBo3KMD1gBTAuCD1BCxEvQ/viewform?embedded=true"></iframe>
+    <!-- Contenedor del Iframe Forzado a Pantalla Completa -->
+    <div id="addin-content-area" style="width: 100%; flex: 1; min-height: calc(100vh - 60px); height: calc(100vh - 60px); margin: 0; padding: 0; box-sizing: border-box; overflow: hidden;">
+      <iframe id="main-frame" 
+              src="https://docs.google.com/forms/d/e/1FAIpQLSe2R1JXtsO6H_DBujCz_a5ZFRbcRBo3KMD1gBTAuCD1BCxEvQ/viewform?embedded=true" 
+              style="width: 100% !important; height: 100% !important; min-height: calc(100vh - 60px) !important; border: 0 !important; margin: 0 !important; padding: 0 !important; display: block !important;">
+      </iframe>
     </div>
+
   </div>
 
   <script>
-    // Enlaces de Google Forms y Google Sheets integrados
     const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe2R1JXtsO6H_DBujCz_a5ZFRbcRBo3KMD1gBTAuCD1BCxEvQ/viewform?embedded=true";
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPu6sogcbKBcRIaN7RTSPcpfVKhKFfJxrtquKjmaeXIEeO33_A2V9OvMNZhIaFh_RDRd5_Cc1jx2ok/pubhtml?widget=true&headers=false";
 
@@ -120,27 +46,33 @@
 
       if (tab === 'form') {
         frame.src = FORM_URL;
-        btnForm.classList.add('active');
-        btnSheet.classList.remove('active');
+        btnForm.style.backgroundColor = "#0076ce";
+        btnForm.style.borderColor = "#0076ce";
+        btnForm.style.color = "#ffffff";
+        
+        btnSheet.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+        btnSheet.style.borderColor = "rgba(255, 255, 255, 0.25)";
+        btnSheet.style.color = "#e0e0e0";
       } else if (tab === 'sheet') {
         frame.src = SHEET_URL;
-        btnSheet.classList.add('active');
-        btnForm.classList.remove('active');
+        btnSheet.style.backgroundColor = "#0076ce";
+        btnSheet.style.borderColor = "#0076ce";
+        btnSheet.style.color = "#ffffff";
+
+        btnForm.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+        btnForm.style.borderColor = "rgba(255, 255, 255, 0.25)";
+        btnForm.style.color = "#e0e0e0";
       }
     }
 
-    // Integración con el ciclo de vida de MyGeotab
+    // Ciclo de vida oficial MyGeotab
     geotab.addin.workOrders = function (api, state) {
       return {
         initialize: function (api, state, callback) {
           callback();
         },
-        focus: function (api, state) {
-          // Add-in enfocado en pantalla
-        },
-        blur: function (api, state) {
-          // Usuario navega fuera del Add-in
-        }
+        focus: function (api, state) {},
+        blur: function (api, state) {}
       };
     };
   </script>
