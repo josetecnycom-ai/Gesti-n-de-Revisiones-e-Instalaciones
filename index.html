@@ -36,45 +36,62 @@
   </div>
 
   <script>
-    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe2R1JXtsO6H_DBujCz_a5ZFRbcRBo3KMD1gBTAuCD1BCxEvQ/viewform?embedded=true";
-    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPu6sogcbKBcRIaN7RTSPcpfVKhKFfJxrtquKjmaeXIEeO33_A2V9OvMNZhIaFh_RDRd5_Cc1jx2ok/pubhtml?widget=true&headers=false";
+// SUSTITUYE "entry.1234567890" POR TU ID REAL DE PASO 1
+const ENTRY_DB_ID = "entry.1821858166"; 
 
-    function switchTab(tab) {
+const FORM_BASE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe2R1JXtsO6H_DBujCz_a5ZFRbcRBo3KMD1gBTAuCD1BCxEvQ/viewform?embedded=true";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPu6sogcbKBcRIaN7RTSPcpfVKhKFfJxrtquKjmaeXIEeO33_A2V9OvMNZhIaFh_RDRd5_Cc1jx2ok/pubhtml?widget=true&headers=false";
+
+let currentDbUrl = FORM_BASE_URL;
+
+function switchTab(tab) {
+  const frame = document.getElementById('main-frame');
+  const btnForm = document.getElementById('btn-form');
+  const btnSheet = document.getElementById('btn-sheet');
+
+  if (tab === 'form') {
+    frame.src = currentDbUrl;
+    btnForm.style.backgroundColor = "#0076ce";
+    btnForm.style.borderColor = "#0076ce";
+    btnForm.style.color = "#ffffff";
+    
+    btnSheet.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+    btnSheet.style.borderColor = "rgba(255, 255, 255, 0.25)";
+    btnSheet.style.color = "#e0e0e0";
+  } else if (tab === 'sheet') {
+    frame.src = SHEET_URL;
+    btnSheet.style.backgroundColor = "#0076ce";
+    btnSheet.style.borderColor = "#0076ce";
+    btnSheet.style.color = "#ffffff";
+
+    btnForm.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+    btnForm.style.borderColor = "rgba(255, 255, 255, 0.25)";
+    btnForm.style.color = "#e0e0e0";
+  }
+}
+
+// Integración con el ciclo de vida de MyGeotab
+geotab.addin.workOrders = function (api, state) {
+  return {
+    initialize: function (api, state, callback) {
+      // 1. Obtiene el nombre de la base de datos de MyGeotab automáticamente
+      const databaseName = state.database || 'Base_Desconocida';
+      
+      // 2. Construye la URL del formulario con el campo "Base de Datos" pre-rellenado
+      currentDbUrl = `${FORM_BASE_URL}&${ENTRY_DB_ID}=${encodeURIComponent(databaseName)}`;
+      
+      // 3. Carga el iframe con la URL personalizada
       const frame = document.getElementById('main-frame');
-      const btnForm = document.getElementById('btn-form');
-      const btnSheet = document.getElementById('btn-sheet');
-
-      if (tab === 'form') {
-        frame.src = FORM_URL;
-        btnForm.style.backgroundColor = "#0076ce";
-        btnForm.style.borderColor = "#0076ce";
-        btnForm.style.color = "#ffffff";
-        
-        btnSheet.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-        btnSheet.style.borderColor = "rgba(255, 255, 255, 0.25)";
-        btnSheet.style.color = "#e0e0e0";
-      } else if (tab === 'sheet') {
-        frame.src = SHEET_URL;
-        btnSheet.style.backgroundColor = "#0076ce";
-        btnSheet.style.borderColor = "#0076ce";
-        btnSheet.style.color = "#ffffff";
-
-        btnForm.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-        btnForm.style.borderColor = "rgba(255, 255, 255, 0.25)";
-        btnForm.style.color = "#e0e0e0";
+      if (frame) {
+        frame.src = currentDbUrl;
       }
-    }
-
-    // Ciclo de vida oficial MyGeotab
-    geotab.addin.workOrders = function (api, state) {
-      return {
-        initialize: function (api, state, callback) {
-          callback();
-        },
-        focus: function (api, state) {},
-        blur: function (api, state) {}
-      };
-    };
+      
+      callback();
+    },
+    focus: function (api, state) {},
+    blur: function (api, state) {}
+  };
+};
   </script>
 </body>
 </html>
